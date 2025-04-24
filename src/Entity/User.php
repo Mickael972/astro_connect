@@ -57,11 +57,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'user')]
     private Collection $likes;
 
+    /**
+     * @var Collection<int, Message>
+     */
+    #[ORM\OneToMany(targetEntity: Message::class, mappedBy: 'sender')]
+    private Collection $messages;
+
+    /**
+     * @var Collection<int, Observation>
+     */
+    #[ORM\OneToMany(targetEntity: Observation::class, mappedBy: 'user')]
+    private Collection $observations;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->observations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -247,6 +261,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($like->getUser() === $this) {
                 $like->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getSender() === $this) {
+                $message->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Observation>
+     */
+    public function getObservations(): Collection
+    {
+        return $this->observations;
+    }
+
+    public function addObservation(Observation $observation): static
+    {
+        if (!$this->observations->contains($observation)) {
+            $this->observations->add($observation);
+            $observation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeObservation(Observation $observation): static
+    {
+        if ($this->observations->removeElement($observation)) {
+            // set the owning side to null (unless already changed)
+            if ($observation->getUser() === $this) {
+                $observation->setUser(null);
             }
         }
 
