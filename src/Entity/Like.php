@@ -8,7 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['like:read']],
+    denormalizationContext: ['groups' => ['like:write']]
+)]
 class Like
 {
     #[ORM\Id]

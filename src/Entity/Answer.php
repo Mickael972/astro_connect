@@ -10,7 +10,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AnswerRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['answer:read']],
+    denormalizationContext: ['groups' => ['answer:write']]
+)]
 class Answer
 {
     #[ORM\Id]

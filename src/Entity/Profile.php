@@ -8,7 +8,10 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['profile:read']],
+    denormalizationContext: ['groups' => ['profile:write']],
+)]
 class Profile
 {
     #[ORM\Id]

@@ -7,7 +7,9 @@ use App\Repository\UserAnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserAnswerRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user_answer:write']]
+)]
 class UserAnswer
 {
     #[ORM\Id]

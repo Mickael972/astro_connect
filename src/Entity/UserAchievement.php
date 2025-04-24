@@ -7,7 +7,9 @@ use App\Repository\UserAchievementRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserAchievementRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['user_achievement:read']]
+)]
 class UserAchievement
 {
     #[ORM\Id]

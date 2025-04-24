@@ -8,7 +8,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SkyMapcacheRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['skyMapcache:read']]
+)]
 class SkyMapcache
 {
     #[ORM\Id]
