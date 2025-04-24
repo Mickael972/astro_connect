@@ -87,6 +87,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Score::class, mappedBy: 'user')]
     private Collection $scores;
 
+    /**
+     * @var Collection<int, SkyMapcache>
+     */
+    #[ORM\OneToMany(targetEntity: SkyMapcache::class, mappedBy: 'user')]
+    private Collection $skyMapcaches;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -97,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userAchievements = new ArrayCollection();
         $this->userAnswers = new ArrayCollection();
         $this->scores = new ArrayCollection();
+        $this->skyMapcaches = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -432,6 +439,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($score->getUser() === $this) {
                 $score->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SkyMapcache>
+     */
+    public function getSkyMapcaches(): Collection
+    {
+        return $this->skyMapcaches;
+    }
+
+    public function addSkyMapcach(SkyMapcache $skyMapcach): static
+    {
+        if (!$this->skyMapcaches->contains($skyMapcach)) {
+            $this->skyMapcaches->add($skyMapcach);
+            $skyMapcach->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSkyMapcach(SkyMapcache $skyMapcach): static
+    {
+        if ($this->skyMapcaches->removeElement($skyMapcach)) {
+            // set the owning side to null (unless already changed)
+            if ($skyMapcach->getUser() === $this) {
+                $skyMapcach->setUser(null);
             }
         }
 
