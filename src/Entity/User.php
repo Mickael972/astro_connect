@@ -69,6 +69,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Observation::class, mappedBy: 'user')]
     private Collection $observations;
 
+    /**
+     * @var Collection<int, UserAchievement>
+     */
+    #[ORM\OneToMany(targetEntity: UserAchievement::class, mappedBy: 'user')]
+    private Collection $userAchievements;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -76,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->likes = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->observations = new ArrayCollection();
+        $this->userAchievements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -321,6 +328,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($observation->getUser() === $this) {
                 $observation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserAchievement>
+     */
+    public function getUserAchievements(): Collection
+    {
+        return $this->userAchievements;
+    }
+
+    public function addUserAchievement(UserAchievement $userAchievement): static
+    {
+        if (!$this->userAchievements->contains($userAchievement)) {
+            $this->userAchievements->add($userAchievement);
+            $userAchievement->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAchievement(UserAchievement $userAchievement): static
+    {
+        if ($this->userAchievements->removeElement($userAchievement)) {
+            // set the owning side to null (unless already changed)
+            if ($userAchievement->getUser() === $this) {
+                $userAchievement->setUser(null);
             }
         }
 
